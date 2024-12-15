@@ -13,3 +13,7 @@ func ReadFile(filepath string) ([]string, error) {
 
 	return strings.Split(string(s), "\n"), nil
 }
+
+func Abs(a int) int {
+	return max(a, -a)
+}
