@@ -58,7 +58,6 @@ const convertToGrid = (str: string): GameState => {
 const file = Bun.file(FILENAME);
 const text = await file.text();
 let gamestate = convertToGrid(text);
-console.log(gamestate);
 findPath(gamestate);
 console.log(gamestate.spacesMoved.size);
 
