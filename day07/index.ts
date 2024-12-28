@@ -1,7 +1,7 @@
 const FILE_NAME = "input.txt";
 
 type Op = "+" | "*";
-const OP_OPTIONS = ["+", "*"];
+const OP_OPTIONS: Op[] = ["+", "*"];
 
 async function readInput(): Promise<string[]> {
   const input = await Bun.file(FILE_NAME).text();
@@ -34,7 +34,7 @@ function intToOpArray(digit: number, slots: number): Op[] {
     .split("")
     .reverse()
     .forEach((val: string, i: number): void => {
-      toReturn[i] = OP_OPTIONS[val];
+      toReturn[i] = OP_OPTIONS[val as any as number];
     });
 
   return toReturn;
