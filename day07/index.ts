@@ -1,7 +1,8 @@
 const FILE_NAME = "input.txt";
 
-type Op = "+" | "*";
-const OP_OPTIONS: Op[] = ["+", "*"];
+type Op = "+" | "*" | "||";
+const OP_OPTIONS: Op[] = ["+", "*", "||"];
+let OPERATION_COUNTS = 3;
 
 async function readInput(): Promise<string[]> {
   const input = await Bun.file(FILE_NAME).text();
@@ -16,10 +17,10 @@ interface Row {
 
 function isValidRow(row: Row): boolean {
   const slots = row.nums.length - 1;
-  for (let i = 0; i < 2 ** slots; i++) {
+  for (let i = 0; i < OPERATION_COUNTS ** slots; i++) {
     let ops = intToOpArray(i, slots);
     if (row.total === computeRow(row.nums, ops)) {
-      console.log("row is valid", row);
+      //console.log("row is valid", row);
       return true;
     }
   }
@@ -30,7 +31,7 @@ function intToOpArray(digit: number, slots: number): Op[] {
   let toReturn: Op[] = Array(slots).fill("+");
 
   digit
-    .toString(2)
+    .toString(OPERATION_COUNTS)
     .split("")
     .reverse()
     .forEach((val: string, i: number): void => {
@@ -46,10 +47,15 @@ function computeRow(nums: number[], ops: Op[]): number {
   let opIndex = 0;
   for (; numberIndex < nums.length; numberIndex++, opIndex++) {
     let opCode = ops[opIndex];
-    accumulation = eval([accumulation, opCode, nums[numberIndex]].join(""));
+    if (opCode === "||") {
+        accumulation = parseInt(accumulation.toString().concat(nums[numberIndex].toString()), 10);
+    }
+    else {
+        accumulation = eval([accumulation, opCode, nums[numberIndex]].join(""));
+    }
   }
 
-  console.log(nums, ops, accumulation);
+  //console.log(nums, ops, accumulation);
   return accumulation;
 }
 
@@ -67,11 +73,24 @@ async function main() {
     return { total, nums };
   });
 
-  let accumulation = 0;
+  let accumulation = 0n;
+  let unmatchedRows: Row[] = [];
+  OPERATION_COUNTS = 2;
   rows.forEach((row) => {
     if (isValidRow(row)) {
-      accumulation += row.total;
+      accumulation += BigInt(row.total);
       console.log("accumulation: " + accumulation);
+    }
+    else {
+      unmatchedRows.push(row);
+    }
+  });
+
+  console.log("Number of rows that are invalid: " + unmatchedRows.length);
+  OPERATION_COUNTS = 3;
+  unmatchedRows.forEach((row) => {
+    if (isValidRow(row)) {
+      accumulation += BigInt(row.total);
     }
   });
   console.log("final accumulation: " + accumulation);
