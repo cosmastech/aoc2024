@@ -1,4 +1,4 @@
-const FILE = "example.txt";
+const FILE = "input.txt";
 
 interface Coordinate {
   x: number;
@@ -111,6 +111,7 @@ function buildPuzzle(): Puzzle {
 const puzzle: Puzzle = buildPuzzle();
 
 let sumOfTrailHeads = 0;
+let sumOfAllUniqueTrails = 0;
 puzzle.trailheads.forEach((trailheadCoordinates, index) => {
   console.log(`trailhead ${index}:`, trailheadCoordinates);
 
@@ -118,7 +119,11 @@ puzzle.trailheads.forEach((trailheadCoordinates, index) => {
   solver.solve(trailheadCoordinates);
 
   console.log(`Trailheads found in ${index}: ${solver.getUniqueEndPoints()}`);
+  const uniqueTrails = solver.paths.length;
+  console.log("unique trails: " + uniqueTrails);
+  sumOfAllUniqueTrails += uniqueTrails;
   sumOfTrailHeads += solver.getUniqueEndPoints();
 });
 
 console.log("total trailheads: " + sumOfTrailHeads);
+console.log("total unique trails: " + sumOfAllUniqueTrails);
