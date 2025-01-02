@@ -54,14 +54,15 @@ class DiskMap {
     }
   }
 
-  setFirstFreeSpaceIndex(): void
-  {
-    this.firstFreeSpaceIndex = this.data.findIndex((u: Unit) => u === undefined);
+  setFirstFreeSpaceIndex(): void {
+    this.firstFreeSpaceIndex = this.data.findIndex((u: Unit) =>
+      u === undefined
+    );
   }
 }
 
 function moveData(diskMap: DiskMap): void {
-  while (diskMap.countOfFreeBlocks > 0)  {
+  while (diskMap.countOfFreeBlocks > 0) {
     const unitToAdd = diskMap.getLastNonFreeUnit();
     diskMap.setFirstFreeSpaceIndex();
     if (diskMap.firstFreeSpaceIndex === -1) {
@@ -73,8 +74,7 @@ function moveData(diskMap: DiskMap): void {
   }
 }
 
-function computeCheckSum(diskMap: DiskMap): bigint
-{
+function computeCheckSum(diskMap: DiskMap): bigint {
   let accumulation = 0n;
   console.log(diskMap.data.slice(-10));
   diskMap.data.forEach((u: Unit, index: number) => {
