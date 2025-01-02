@@ -1,34 +1,3 @@
-const getInputString = (): string => {
-  const FILEPATH = Deno.args[0] || "input.txt";
-
-  console.log(`Using input from: ${FILEPATH}`);
-
-  return Deno.readTextFileSync(FILEPATH);
-};
-
-const convertStringToDiskMap = (inputString: string): DiskMap => {
-  console.log(`inputString: ${inputString}`);
-  const digits = inputString.split("");
-
-  const diskMap = new DiskMap();
-  let fileId = 0;
-
-  for (let i = 0; i < digits.length; i++) {
-    const digit = parseInt(digits[i]);
-    if (i % 2 === 0) {
-      for (let fileSize = 0; fileSize < digit; fileSize++) {
-        diskMap.data.push({ id: fileId });
-      }
-      fileId++;
-    } else {
-      diskMap.data.push(...Array(digit).fill(undefined));
-      diskMap.countOfFreeBlocks += digit;
-    }
-  }
-
-  return diskMap;
-};
-
 interface File {
   id: number;
 }
@@ -60,6 +29,37 @@ class DiskMap {
     );
   }
 }
+
+const getInputString = (): string => {
+  const FILEPATH = Deno.args[0] || "input.txt";
+
+  console.log(`Using input from: ${FILEPATH}`);
+
+  return Deno.readTextFileSync(FILEPATH);
+};
+
+const convertStringToDiskMap = (inputString: string): DiskMap => {
+  console.log(`inputString: ${inputString}`);
+  const digits = inputString.split("");
+
+  const diskMap = new DiskMap();
+  let fileId = 0;
+
+  for (let i = 0; i < digits.length; i++) {
+    const digit = parseInt(digits[i]);
+    if (i % 2 === 0) {
+      for (let fileSize = 0; fileSize < digit; fileSize++) {
+        diskMap.data.push({ id: fileId });
+      }
+      fileId++;
+    } else {
+      diskMap.data.push(...Array(digit).fill(undefined));
+      diskMap.countOfFreeBlocks += digit;
+    }
+  }
+
+  return diskMap;
+};
 
 function moveData(diskMap: DiskMap): void {
   while (diskMap.countOfFreeBlocks > 0) {
